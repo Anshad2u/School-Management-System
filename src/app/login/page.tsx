@@ -7,28 +7,34 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
   const { signIn } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setLoading(true)
     try {
       await signIn(email, password)
       router.push('/')
     } catch (error) {
       console.error('Error signing in:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Welcome Back</CardTitle>
+          <p className="text-sm text-gray-600">Sign in to your account</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -37,9 +43,11 @@ export default function LoginPage() {
               <Input
                 id="email"
                 type="email"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="h-11"
               />
             </div>
             <div className="space-y-2">
@@ -47,16 +55,25 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="h-11"
               />
             </div>
-            <Button type="submit" className="w-full">Login</Button>
+            <Button type="submit" className="w-full h-11" disabled={loading}>
+              {loading ? 'Signing in...' : 'Login'}
+            </Button>
           </form>
+          <div className="mt-4 text-center text-sm">
+            <span className="text-gray-600">Don't have an account? </span>
+            <Link href="/signup" className="text-blue-600 hover:underline">
+              Sign up
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
   )
 }
-

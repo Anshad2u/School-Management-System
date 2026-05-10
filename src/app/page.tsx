@@ -52,9 +52,17 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Welcome to School Management System</h1>
-        <p>Please log in to access the dashboard.</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 text-center px-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">Welcome to School Management System</h1>
+        <p className="text-gray-600 max-w-sm">Please log in to access the dashboard.</p>
+        <div className="flex gap-3">
+          <Link href="/login">
+            <Button>Login</Button>
+          </Link>
+          <Link href="/signup">
+            <Button variant="outline">Sign Up</Button>
+          </Link>
+        </div>
       </div>
     )
   }
