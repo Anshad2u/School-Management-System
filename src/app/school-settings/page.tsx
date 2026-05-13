@@ -44,7 +44,7 @@ type SchoolSettings = {
 }
 
 const defaultSettings: SchoolSettings = {
-  id: '00000000-0000-0000-0000-000000000001',
+  id: '11111111-1111-1111-1111-111111111111',
   name: '',
   address: '',
   description: '',
@@ -127,7 +127,7 @@ export default function SchoolSettingsPage() {
       const { error } = await supabase
         .from('school_settings')
         .upsert({
-          id: '00000000-0000-0000-0000-000000000001',
+          id: '11111111-1111-1111-1111-111111111111',
           ...settings,
           updated_by: user?.id
         })

@@ -1,6 +1,6 @@
 -- Create school_settings table
 create table school_settings (
-  id bigint primary key,
+  id uuid primary key default gen_random_uuid(),
   name text,
   address text,
   description text,
