@@ -12,35 +12,36 @@ import { useToast } from '@/components/ui/use-toast'
 
 type SchoolSettings = {
   id: string
-  name: string
-  address: string
-  description: string
-  contact_phone: string
-  contact_email: string
-  address_line: string
-  city: string
-  state: string
-  postal_code: string
-  country: string
-  website_url: string
-  monday_start: string
-  monday_end: string
-  tuesday_start: string
-  tuesday_end: string
-  wednesday_start: string
-  wednesday_end: string
-  thursday_start: string
-  thursday_end: string
-  friday_start: string
-  friday_end: string
-  saturday_start: string
-  saturday_end: string
-  sunday_start: string
-  sunday_end: string
-  logo_url: string
-  motto: string
-  primary_color: string
-  secondary_color: string
+  // DB column mapping: school_name -> name, phone -> contact_phone, email -> contact_email
+  name: string | null // maps to school_name in DB
+  address: string | null
+  description: string | null
+  contact_phone: string | null // maps to phone in DB
+  contact_email: string | null // maps to email in DB
+  address_line: string | null
+  city: string | null
+  state: string | null
+  postal_code: string | null
+  country: string | null
+  website_url: string | null
+  monday_start: string | null
+  monday_end: string | null
+  tuesday_start: string | null
+  tuesday_end: string | null
+  wednesday_start: string | null
+  wednesday_end: string | null
+  thursday_start: string | null
+  thursday_end: string | null
+  friday_start: string | null
+  friday_end: string | null
+  saturday_start: string | null
+  saturday_end: string | null
+  sunday_start: string | null
+  sunday_end: string | null
+  logo_url: string | null
+  motto: string | null
+  primary_color: string | null
+  secondary_color: string | null
 }
 
 const defaultSettings: SchoolSettings = {
@@ -98,9 +99,41 @@ export default function SchoolSettingsPage() {
       if (error && error.code !== 'PGRST116') throw error
 
       if (data) {
-        setSettings({ ...defaultSettings, ...data })
+        // Map DB columns to interface (school_name -> name, phone -> contact_phone, email -> contact_email)
+        const mappedData: SchoolSettings = {
+          id: data.id,
+          name: data.school_name || data.name || '',
+          address: data.address || data.address || '',
+          description: data.description || '',
+          contact_phone: data.phone || data.contact_phone || '',
+          contact_email: data.email || data.contact_email || '',
+          address_line: data.address_line || '',
+          city: data.city || '',
+          state: data.state || '',
+          postal_code: data.postal_code || '',
+          country: data.country || '',
+          website_url: data.website_url || '',
+          monday_start: data.monday_start || '',
+          monday_end: data.monday_end || '',
+          tuesday_start: data.tuesday_start || '',
+          tuesday_end: data.tuesday_end || '',
+          wednesday_start: data.wednesday_start || '',
+          wednesday_end: data.wednesday_end || '',
+          thursday_start: data.thursday_start || '',
+          thursday_end: data.thursday_end || '',
+          friday_start: data.friday_start || '',
+          friday_end: data.friday_end || '',
+          saturday_start: data.saturday_start || '',
+          saturday_end: data.saturday_end || '',
+          sunday_start: data.sunday_start || '',
+          sunday_end: data.sunday_end || '',
+          logo_url: data.logo_url || '',
+          motto: data.motto || '',
+          primary_color: data.primary_color || '#3b82f6',
+          secondary_color: data.secondary_color || '#64748b'
+        }
+        setSettings(mappedData)
       } else {
-        // No existing settings - use a fixed uuid for single-school system
         setSettings({ ...defaultSettings, id: '11111111-1111-1111-1111-111111111111' })
       }
     } catch (error) {
@@ -127,13 +160,44 @@ export default function SchoolSettingsPage() {
     }
 
     try {
+      // Map interface back to DB columns
+      const dbData = {
+        id: settings.id || '11111111-1111-1111-1111-111111111111',
+        school_name: settings.name,
+        address: settings.address,
+        description: settings.description,
+        phone: settings.contact_phone,
+        email: settings.contact_email,
+        address_line: settings.address_line,
+        city: settings.city,
+        state: settings.state,
+        postal_code: settings.postal_code,
+        country: settings.country,
+        website_url: settings.website_url,
+        monday_start: settings.monday_start,
+        monday_end: settings.monday_end,
+        tuesday_start: settings.tuesday_start,
+        tuesday_end: settings.tuesday_end,
+        wednesday_start: settings.wednesday_start,
+        wednesday_end: settings.wednesday_end,
+        thursday_start: settings.thursday_start,
+        thursday_end: settings.thursday_end,
+        friday_start: settings.friday_start,
+        friday_end: settings.friday_end,
+        saturday_start: settings.saturday_start,
+        saturday_end: settings.saturday_end,
+        sunday_start: settings.sunday_start,
+        sunday_end: settings.sunday_end,
+        logo_url: settings.logo_url,
+        motto: settings.motto,
+        primary_color: settings.primary_color,
+        secondary_color: settings.secondary_color,
+        updated_by: user?.id
+      }
+
       const { error } = await supabase
         .from('school_settings')
-        .upsert({
-          id: settings.id || 1,
-          ...settings,
-          updated_by: user?.id
-        })
+        .upsert(dbData)
 
       if (error) throw error
 
@@ -152,7 +216,7 @@ export default function SchoolSettingsPage() {
   }
 
   const handleInputChange = (field: keyof SchoolSettings, value: string) => {
-    setSettings(prev => ({ ...prev, [field]: value }))
+    setSettings(prev => ({ ...prev, [field]: value || '' }))
   }
 
   if (userRole && userRole !== 'principal' && userRole !== 'admin') {
