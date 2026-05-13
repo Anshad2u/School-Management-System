@@ -1,0 +1,18 @@
+{
+  "name": "sms_inspection",
+  "timestamp": "2026-05-11T23:43:11.426Z",
+  "summary": {
+    "consoleLogsCount": 0,
+    "errorsCount": 0,
+    "failedRequestsCount": 0
+  },
+  "data": {
+    "consoleLogs": [],
+    "errors": [],
+    "failedRequests": []
+  },
+  "timestamps": {
+    "connect": "2026-05-11T23:43:09.714Z",
+    "navigate_https://my-sms-beta.vercel.app/": "2026-05-11T23:43:11.239Z"
+  }
+}

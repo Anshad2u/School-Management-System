@@ -8,22 +8,41 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('anshadputtur@gmail.com')
+  const [password, setPassword] = useState('Admin@123456')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const { signIn } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
     try {
       await signIn(email, password)
       router.push('/')
-    } catch (error) {
-      console.error('Error signing in:', error)
+    } catch (err: any) {
+      setError(err.message || 'Failed to sign in')
+      console.error('Error signing in:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDemoLogin = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      // Use demo mode - set localStorage and redirect
+      localStorage.setItem('demoMode', 'true')
+      localStorage.setItem('demoRole', 'admin')
+      router.push('/')
+    } catch (err: any) {
+      setError(err.message || 'Failed to sign in')
     } finally {
       setLoading(false)
     }
@@ -33,11 +52,16 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Welcome Back</CardTitle>
+          <CardTitle className="text-2xl">Welcome to Gem Stone Salafi School</CardTitle>
           <p className="text-sm text-gray-600">Sign in to your account</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -66,6 +90,11 @@ export default function LoginPage() {
               {loading ? 'Signing in...' : 'Login'}
             </Button>
           </form>
+          <div className="mt-2">
+            <Button variant="outline" className="w-full" onClick={handleDemoLogin} disabled={loading}>
+              Demo Login (Admin)
+            </Button>
+          </div>
           <div className="mt-4 text-center text-sm">
             <span className="text-gray-600">Don't have an account? </span>
             <Link href="/signup" className="text-blue-600 hover:underline">

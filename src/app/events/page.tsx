@@ -9,8 +9,6 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 type Event = {
   id: string
@@ -29,7 +27,7 @@ export default function EventsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { user } = useAuth()
+  const { user, userRole } = useAuth()
   const { toast } = useToast()
 
   useEffect(() => {
@@ -67,8 +65,7 @@ export default function EventsPage() {
         .insert({
           title,
           description,
-          date,
-          user_id: user.id
+          date
         })
 
       if (error) throw error
@@ -93,44 +90,17 @@ export default function EventsPage() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">School Events</h1>
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Events</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="mb-4">
-                <Skeleton className="h-6 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-1/2 mb-2" />
-                <Skeleton className="h-4 w-full" />
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">School Events</h1>
-        <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold">School Events</h1>
-      {user && user.user_metadata.role === 'staff' && (
+      <h1 className="text-2xl sm:text-3xl font-bold">School Events</h1>
+      
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700">{error}</p>
+        </div>
+      )}
+
+      {(userRole === 'staff' || userRole === 'principal') && (
         <Card>
           <CardHeader>
             <CardTitle>Create Event</CardTitle>
@@ -144,6 +114,7 @@ export default function EventsPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
+                  className="h-11"
                 />
               </div>
               <div className="space-y-2">
@@ -153,6 +124,7 @@ export default function EventsPage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   required
+                  className="min-h-[80px]"
                 />
               </div>
               <div className="space-y-2">
@@ -163,30 +135,41 @@ export default function EventsPage() {
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   required
+                  className="h-11"
                 />
               </div>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting} className="h-11">
                 {isSubmitting ? 'Creating...' : 'Create Event'}
               </Button>
             </form>
           </CardContent>
         </Card>
       )}
+
       <Card>
         <CardHeader>
           <CardTitle>Upcoming Events</CardTitle>
         </CardHeader>
         <CardContent>
-          {events.map((event) => (
-            <div key={event.id} className="mb-4">
-              <h3 className="text-lg font-semibold">{event.title}</h3>
-              <p className="text-sm text-gray-500">{new Date(event.date).toLocaleDateString()}</p>
-              <p className="mt-2">{event.description}</p>
+          {isLoading ? (
+            <div className="space-y-4">
+              {[1, 2].map(i => (
+                <div key={i} className="h-20 bg-gray-100 rounded animate-pulse"></div>
+              ))}
             </div>
-          ))}
+          ) : events.length === 0 ? (
+            <p className="text-center py-4 text-gray-500">No upcoming events</p>
+          ) : (
+            events.map((event) => (
+              <div key={event.id} className="mb-4 p-3 bg-gray-50 rounded-lg">
+                <h3 className="text-lg font-semibold">{event.title}</h3>
+                <p className="text-sm text-gray-500">{new Date(event.date).toLocaleDateString()}</p>
+                <p className="mt-1">{event.description}</p>
+              </div>
+            ))
+          )}
         </CardContent>
       </Card>
     </div>
   )
 }
-

@@ -37,7 +37,7 @@ export default function PerformanceEvaluationPage() {
   const { toast } = useToast()
 
   useEffect(() => {
-    if (userRole === 'principal') {
+    if (userRole === 'principal' || userRole === 'admin') {
       fetchEvaluations()
       fetchUsers()
     }
@@ -71,7 +71,7 @@ export default function PerformanceEvaluationPage() {
 
   const handleEvaluation = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (userRole !== 'principal') {
+    if (userRole !== 'principal' && userRole !== 'admin') {
       toast({
         title: "Error",
         description: "Only principals can submit evaluations.",
@@ -110,18 +110,18 @@ export default function PerformanceEvaluationPage() {
     }
   }
 
-  if (userRole !== 'principal') {
+  if (userRole && userRole !== 'principal' && userRole !== 'admin') {
     return (
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Performance Evaluation</h1>
-        <p>You do not have permission to access this page.</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <h1 className="text-2xl font-bold mb-2">No Permission</h1>
+        <p className="text-gray-600">You do not have permission to access this page.</p>
       </div>
     )
   }
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold">Performance Evaluation</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold">Performance Evaluation</h1>
       <Card>
         <CardHeader>
           <CardTitle>Submit Evaluation</CardTitle>

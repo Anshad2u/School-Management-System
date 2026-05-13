@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, GraduationCap, BookOpen, CreditCard } from 'lucide-react'
 import Link from 'next/link'
-import './globals.css'
+
 export default function Dashboard() {
   const { user, userRole } = useAuth()
   const [stats, setStats] = useState({
@@ -18,7 +18,7 @@ export default function Dashboard() {
   })
 
   useEffect(() => { 
-    if (userRole === 'staff') {
+    if (['staff', 'principal', 'admin'].includes(userRole || '')) {
       fetchStats()
     }
   }, [userRole])
@@ -30,9 +30,8 @@ export default function Dashboard() {
       .eq('role', 'student')
 
     const { data: teacherCount } = await supabase
-      .from('profiles')
+      .from('teachers')
       .select('id', { count: 'exact' })
-      .eq('role', 'teacher')
 
     const { data: courseCount } = await supabase
       .from('courses')
@@ -46,15 +45,15 @@ export default function Dashboard() {
       studentCount: studentCount?.length || 0,
       teacherCount: teacherCount?.length || 0,
       courseCount: courseCount?.length || 0,
-      feeCollection: feeCollection ? feeCollection.reduce((sum, fee) => sum + fee.amount, 0) : 0,
+      feeCollection: feeCollection ? feeCollection.reduce((sum, fee) => sum + Number(fee.amount || 0), 0) : 0,
     })
   }
 
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 text-center px-4">
-        <h1 className="text-2xl sm:text-3xl font-bold">Welcome to School Management System</h1>
-        <p className="text-gray-600 max-w-sm">Please log in to access the dashboard.</p>
+        <h1 className="text-2xl sm:text-3xl font-bold">Welcome to Gem Stone Salafi School</h1>
+        <p className="text-gray-600 max-w-sm">Islamic education for children ages 6-14. Please log in to access the dashboard.</p>
         <div className="flex gap-3">
           <Link href="/login">
             <Button>Login</Button>
@@ -69,12 +68,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-      {userRole === 'staff' && (
+      <h1 className="text-2xl sm:text-3xl font-bold">Gem Stone Salafi School Dashboard</h1>
+      {['staff', 'principal', 'admin'].includes(userRole || '') && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
-            <CardHeader className="flex flex-row items-center jusctify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Students (6-14 yrs)</CardTitle>
               <Users size={20} />
             </CardHeader>
             <CardContent>
@@ -83,7 +82,7 @@ export default function Dashboard() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
+              <CardTitle className="text-sm font-medium">Teachers</CardTitle>
               <GraduationCap size={20} />
             </CardHeader>
             <CardContent>
@@ -92,7 +91,7 @@ export default function Dashboard() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Courses</CardTitle>
+              <CardTitle className="text-sm font-medium">Subjects</CardTitle>
               <BookOpen size={20} />
             </CardHeader>
             <CardContent>
@@ -105,7 +104,7 @@ export default function Dashboard() {
               <CreditCard size={20} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${stats.feeCollection.toFixed(2)}</div>
+              <div className="text-2xl font-bold">₹{stats.feeCollection.toFixed(2)}</div>
             </CardContent>
           </Card>
         </div>
@@ -116,7 +115,7 @@ export default function Dashboard() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
-            {userRole === 'staff' && (
+            {['staff', 'principal', 'admin'].includes(userRole || '') && (
               <>
                 <Link href="/admissions">
                   <Button className="w-full">New Admission</Button>
@@ -126,42 +125,24 @@ export default function Dashboard() {
                 </Link>
               </>
             )}
-            {userRole === 'student' && (
-              <>
-                <Link href="/courses">
-                  <Button className="w-full">View Courses</Button>
-                </Link>
-                <Link href="/resources">
-                  <Button className="w-full">Access Resources</Button>
-                </Link>
-              </>
-            )}
+            <Link href="/courses">
+              <Button className="w-full">View Subjects</Button>
+            </Link>
             <Link href="/stories">
-              <Button className="w-full">View Stories</Button>
+              <Button className="w-full">School Stories</Button>
             </Link>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activities</CardTitle>
+            <CardTitle>Islamic Education Focus</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2">
-              {userRole === 'staff' ? (
-                <>
-                  <li>New student admitted: John Doe</li>
-                  <li>Fee payment received: $500</li>
-                  <li>New staff added: Jane Smith</li>
-                  <li>Course schedule updated: Mathematics 101</li>
-                </>
-              ) : (
-                <>
-                  <li>New assignment posted: English Literature</li>
-                  <li>Upcoming exam: Physics on 15th May</li>
-                  <li>New resource uploaded: Chemistry notes</li>
-                  <li>School event announced: Annual Sports Day</li>
-                </>
-              )}
+            <ul className="space-y-2 text-sm">
+              <li>📖 Quran Recitation with Tajweed</li>
+              <li>🕌 Authentic Hadith Studies</li>
+              <li>🕌 Islamic Studies & Character</li>
+              <li>🕌 Arabic Language for Understanding</li>
             </ul>
           </CardContent>
         </Card>
@@ -169,4 +150,3 @@ export default function Dashboard() {
     </div>
   )
 }
-

@@ -7,20 +7,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useToast } from "@/hooks/use-toast"
-import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { useToast } from '@/components/ui/use-toast'
 
 type Story = {
   id: string
-  user_id: string
   content: string
   created_at: string
-  user: {
-    username: string
-    avatar_url: string | null
-  }
 }
 
 export default function StoriesPage() {
@@ -40,17 +32,9 @@ export default function StoriesPage() {
     setIsLoading(true)
     setError(null)
     try {
-      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
       const { data, error } = await supabase
         .from('stories')
-        .select(`
-          id,
-          user_id,
-          content,
-          created_at,
-          user:profiles(username, avatar_url)
-        `)
-        .gt('created_at', twentyFourHoursAgo)
+        .select('*')
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -72,7 +56,6 @@ export default function StoriesPage() {
       const { error } = await supabase
         .from('stories')
         .insert({
-          user_id: user.id,
           content
         })
 
@@ -96,42 +79,16 @@ export default function StoriesPage() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Stories</h1>
-        <Card>
-          <CardContent className="pt-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="mb-4 flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[200px]" />
-                  <Skeleton className="h-4 w-[100px]" />
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">Stories</h1>
-        <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold">Stories</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold">Stories</h1>
+      
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700">{error}</p>
+        </div>
+      )}
+
       {user && (
         <Card>
           <CardHeader>
@@ -146,36 +103,41 @@ export default function StoriesPage() {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   required
+                  className="h-11"
                 />
               </div>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting} className="h-11">
                 {isSubmitting ? 'Uploading...' : 'Upload Story'}
               </Button>
             </form>
           </CardContent>
         </Card>
       )}
+
       <Card>
         <CardHeader>
           <CardTitle>Recent Stories</CardTitle>
         </CardHeader>
         <CardContent>
-          {stories.map((story) => (
-            <div key={story.id} className="mb-4 flex items-center space-x-4">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={story.user.avatar_url || undefined} alt={story.user.username} />
-                <AvatarFallback>{story.user.username.charAt(0).toUpperCase()}</AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-semibold">{story.user.username}</p>
-                <p>{story.content}</p>
+          {isLoading ? (
+            <div className="space-y-3">
+              {[1, 2].map(i => (
+                <div key={i} className="h-16 bg-gray-100 rounded animate-pulse"></div>
+              ))}
+            </div>
+          ) : stories.length === 0 ? (
+            <p className="text-center py-4 text-gray-500">No stories yet</p>
+          ) : (
+            stories.map((story) => (
+              <div key={story.id} className="mb-4 p-3 bg-gray-50 rounded-lg">
+                <p className="font-semibold mb-1">Admin</p>
+                <p className="mb-1">{story.content}</p>
                 <p className="text-sm text-gray-500">{new Date(story.created_at).toLocaleString()}</p>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </CardContent>
       </Card>
     </div>
   )
 }
-

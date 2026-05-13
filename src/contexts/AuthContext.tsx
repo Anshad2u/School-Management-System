@@ -36,6 +36,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     })
 
+    // Check for demo mode
+    const demoMode = localStorage.getItem('demoMode')
+    const demoRole = localStorage.getItem('demoRole')
+    if (demoMode === 'true' && demoRole) {
+      setUserRole(demoRole)
+    }
+
     return () => {
       authListener.subscription.unsubscribe()
     }
@@ -72,6 +79,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const signOut = async () => {
+    localStorage.removeItem('demoMode')
+    localStorage.removeItem('demoRole')
     const { error } = await supabase.auth.signOut()
     if (error) throw error
   }

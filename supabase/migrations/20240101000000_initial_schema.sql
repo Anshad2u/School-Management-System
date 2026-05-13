@@ -109,6 +109,42 @@ create table resources (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- Create students table
+create table students (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  grade text,
+  age integer,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Create courses table
+create table courses (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  teacher_id uuid references profiles(id),
+  description text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Create fees table
+create table fees (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid references profiles(id),
+  amount numeric,
+  status text check (status in ('paid', 'pending', 'overdue')),
+  due_date date,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Create follows table
+create table follows (
+  id uuid primary key default gen_random_uuid(),
+  follower_id uuid references profiles(id),
+  following_id uuid references profiles(id),
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 -- Enable Row Level Security
 alter table profiles enable row level security;
 alter table announcements enable row level security;
@@ -122,6 +158,10 @@ alter table school_settings enable row level security;
 alter table stories enable row level security;
 alter table comments enable row level security;
 alter table resources enable row level security;
+alter table students enable row level security;
+alter table courses enable row level security;
+alter table fees enable row level security;
+alter table follows enable row level security;
 
 -- Create policies for profiles
 create policy "Profiles are viewable by everyone" on profiles for select using (true);
