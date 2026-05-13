@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 
 type SchoolSettings = {
-  id: number
+  id: string
   name: string
   address: string
   description: string
@@ -44,7 +44,7 @@ type SchoolSettings = {
 }
 
 const defaultSettings: SchoolSettings = {
-  id: 1,
+  id: '00000000-0000-0000-0000-000000000001',
   name: '',
   address: '',
   description: '',
@@ -127,7 +127,7 @@ export default function SchoolSettingsPage() {
       const { error } = await supabase
         .from('school_settings')
         .upsert({
-          id: 1,
+          id: '00000000-0000-0000-0000-000000000001',
           ...settings,
           updated_by: user?.id
         })
