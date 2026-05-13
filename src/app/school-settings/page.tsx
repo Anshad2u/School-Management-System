@@ -92,13 +92,16 @@ export default function SchoolSettingsPage() {
       const { data, error } = await supabase
         .from('school_settings')
         .select('*')
-        .eq('id', 1)
+        .limit(1)
         .single()
 
       if (error && error.code !== 'PGRST116') throw error
 
       if (data) {
         setSettings({ ...defaultSettings, ...data })
+      } else {
+        // No existing settings - use a fixed uuid for single-school system
+        setSettings({ ...defaultSettings, id: '11111111-1111-1111-1111-111111111111' })
       }
     } catch (error) {
       console.error('Error fetching school settings:', error)
@@ -127,7 +130,7 @@ export default function SchoolSettingsPage() {
       const { error } = await supabase
         .from('school_settings')
         .upsert({
-          id: '11111111-1111-1111-1111-111111111111',
+          id: settings.id || 1,
           ...settings,
           updated_by: user?.id
         })
