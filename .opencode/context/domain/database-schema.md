@@ -93,6 +93,20 @@ Current database schema for Gem Stone Salafi School Management System.
 | secondary_color | text | YES | '#64748b' |
 | created_at | timestamptz | NO | timezone('utc'::text, now()) |
 
+### attendance
+| Column | Type | Nullable | Default |
+|--------|------|----------|---------|
+| id | uuid | NO | gen_random_uuid() |
+| student_id | uuid | NO | references students(id) |
+| date | date | NO | CURRENT_DATE |
+| status | text | NO | 'present' |
+| notes | text | YES | |
+| marked_by | uuid | YES | references profiles(id) |
+| created_at | timestamptz | NO | timezone('utc'::text, now()) |
+
+**Check constraint**: `status IN ('present', 'absent', 'late', 'excused')`
+**Unique constraint**: `(student_id, date)`
+
 ### Other Tables
 - **announcements**: id, title, content, date, created_at
 - **events**: id, name, description, date, created_at
