@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Gem Stone Salafi School',
-  description: 'Manage your school with ease',
+  title: 'Gem Stone Salafi School — Islamic Education for Ages 6-14',
+  description: 'A trusted Salafi institution providing authentic Islamic education alongside modern academics. Rooted in Quran and Sunnah, guided by the understanding of the Pious Predecessors.',
 }
 
 export default function RootLayout({
