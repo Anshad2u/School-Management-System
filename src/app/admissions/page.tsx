@@ -32,22 +32,25 @@ export default function AdmissionsPage() {
         const fullName = `${firstName} ${lastName}`
         const age = dob ? new Date().getFullYear() - new Date(dob).getFullYear() : null
         
-        // Add student to students table (primary source)
         const { data, error } = await supabase.from('students').insert({
           name: fullName,
-          grade: grade || `Age ${age || 6}`
+          grade: grade || `Age ${age || 6}`,
+          age: age,
+          date_of_birth: dob || null,
+          parent_name: parentName,
+          contact_number: contactNumber,
+          status: 'active'
         }).select().single()
 
         if (error) throw error
 
-        // Also add to profiles with student role
         await supabase.from('profiles').insert({
           id: data.id,
           username: fullName,
+          phone_number: contactNumber,
           role: 'student'
         })
 
-        // Add fee record if admission fee is provided
         if (admissionFee && data?.id) {
           await supabase.from('fees').insert({
             student_id: data.id,
@@ -62,7 +65,6 @@ export default function AdmissionsPage() {
           description: `${fullName} has been admitted successfully!`,
         })
         
-        // Reset form
         setFirstName('')
         setLastName('')
         setDob('')
