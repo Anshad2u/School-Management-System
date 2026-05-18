@@ -18,8 +18,12 @@ Current database schema for Gem Stone Salafi School Management System.
 | contact_number | text | YES | |
 | photo_url | text | YES | |
 | status | text | YES | 'active' |
+| home_address | text | YES | |
+| gender | text | YES | |
+| emergency_contact | text | YES | |
 
 **Check constraint**: `status IN ('active', 'graduated', 'transferred', 'withdrawn')`
+**Check constraint**: `gender IN ('male', 'female', 'other')`
 
 ### teachers
 | Column | Type | Nullable | Default |
