@@ -12,6 +12,7 @@ import { ThumbsUp, MessageSquare, Share2 } from 'lucide-react'
 import { useToast } from "@/components/ui/use-toast"
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Resource = {
   id: string
@@ -228,6 +229,7 @@ export default function ResourcesPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">Resources</h1>
       {userRole === 'staff' && (
@@ -316,6 +318,7 @@ export default function ResourcesPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }
 

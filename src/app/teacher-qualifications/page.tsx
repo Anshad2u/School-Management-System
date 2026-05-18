@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Teacher = {
   id: string
@@ -44,6 +45,7 @@ export default function TeacherQualificationsPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">Teacher Qualifications</h1>
       <Card>
@@ -74,6 +76,7 @@ export default function TeacherQualificationsPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }
 

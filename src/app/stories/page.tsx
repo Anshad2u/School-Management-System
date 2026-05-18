@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Story = {
   id: string
@@ -80,6 +81,7 @@ export default function StoriesPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-2xl sm:text-3xl font-bold">Stories</h1>
       
@@ -139,5 +141,6 @@ export default function StoriesPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }

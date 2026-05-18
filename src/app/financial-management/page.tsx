@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Transaction = {
   id: string
@@ -193,6 +194,7 @@ export default function FinancialManagementPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-2xl sm:text-3xl font-bold">Financial Management</h1>
       
@@ -289,5 +291,6 @@ export default function FinancialManagementPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }

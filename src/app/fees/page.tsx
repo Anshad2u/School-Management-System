@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Fee = {
   id: string
@@ -127,6 +128,7 @@ export default function FeesPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-2xl sm:text-3xl font-bold">Fee Management - Gem Stone Salafi School</h1>
       
@@ -236,5 +238,6 @@ export default function FeesPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }

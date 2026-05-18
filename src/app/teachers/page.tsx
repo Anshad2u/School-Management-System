@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Teacher = {
   id: string
@@ -89,6 +90,7 @@ export default function TeachersPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4 sm:space-y-6">
       <h1 className="text-2xl sm:text-3xl font-bold">Salafi School - Teachers</h1>
       
@@ -159,5 +161,6 @@ export default function TeachersPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }

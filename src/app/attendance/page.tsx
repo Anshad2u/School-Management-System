@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 interface Student {
   id: string
@@ -154,6 +155,7 @@ export default function AttendancePage() {
   const counts = summary()
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold">Attendance</h1>
@@ -260,5 +262,6 @@ export default function AttendancePage() {
         </Card>
       </div>
     </div>
+    </ProtectedRoute>
   )
 }

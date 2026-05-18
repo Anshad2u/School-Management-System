@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,6 +17,19 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const { signIn } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/'
+
+  useEffect(() => {
+    // If already logged in, redirect
+    const checkSession = async () => {
+      const { data: { session } } = await (await import('@/lib/supabase')).supabase.auth.getSession()
+      if (session) {
+        router.push(redirect)
+      }
+    }
+    checkSession()
+  }, [router, redirect])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -24,7 +37,7 @@ export default function LoginPage() {
     setError('')
     try {
       await signIn(email, password)
-      router.push('/')
+      router.push(redirect)
     } catch (err: any) {
       setError(err.message || 'Failed to sign in')
       console.error('Error signing in:', err)
@@ -40,7 +53,7 @@ export default function LoginPage() {
       // Use demo mode - set localStorage and redirect
       localStorage.setItem('demoMode', 'true')
       localStorage.setItem('demoRole', 'admin')
-      router.push('/')
+      router.push(redirect)
     } catch (err: any) {
       setError(err.message || 'Failed to sign in')
     } finally {

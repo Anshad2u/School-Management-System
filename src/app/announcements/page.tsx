@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Announcement = {
   id: string
@@ -63,6 +64,7 @@ export default function AnnouncementsPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">Announcements</h1>
       {user && user.user_metadata.role === 'staff' && (
@@ -110,6 +112,7 @@ export default function AnnouncementsPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }
 

@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Staff = {
   id: string
@@ -48,6 +49,7 @@ export default function StaffPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-2xl sm:text-3xl font-bold">Staff Management</h1>
       
@@ -85,5 +87,6 @@ export default function StaffPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }

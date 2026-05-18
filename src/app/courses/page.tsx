@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Course = {
   id: string
@@ -68,6 +69,7 @@ export default function CoursesPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl sm:text-3xl font-bold">Courses</h1>
@@ -126,5 +128,6 @@ export default function CoursesPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }

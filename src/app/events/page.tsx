@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 type Event = {
   id: string
@@ -91,6 +92,7 @@ export default function EventsPage() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-2xl sm:text-3xl font-bold">School Events</h1>
       
@@ -171,5 +173,6 @@ export default function EventsPage() {
         </CardContent>
       </Card>
     </div>
+    </ProtectedRoute>
   )
 }

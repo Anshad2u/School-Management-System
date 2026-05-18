@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 interface FormData {
   firstName: string
@@ -170,7 +171,8 @@ export default function AdmissionsPage() {
   const canSubmit = ['staff', 'principal', 'admin'].includes(userRole || '')
 
   return (
-    <div className="space-y-4">
+    <ProtectedRoute>
+      <div className="space-y-4">
       {/* Print-only admission form */}
       <div ref={printRef} className="hidden print:block print:p-8">
         {printStudent && (
@@ -415,5 +417,6 @@ export default function AdmissionsPage() {
         )}
       </div>
     </div>
+    </ProtectedRoute>
   )
 }

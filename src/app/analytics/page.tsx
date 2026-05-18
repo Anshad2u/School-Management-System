@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 const studentData = [
   { grade: '9th', count: 120 },
@@ -29,6 +30,7 @@ const staffDistribution = [
 
 export default function AnalyticsPage() {
   return (
+    <ProtectedRoute>
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">Analytics</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -107,6 +109,7 @@ export default function AnalyticsPage() {
         </Card>
       </div>
     </div>
+    </ProtectedRoute>
   )
 }
 
