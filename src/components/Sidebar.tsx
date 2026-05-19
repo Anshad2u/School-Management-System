@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useSidebar } from '@/contexts/SidebarContext'
-import { Home, Users, GraduationCap, BookOpen, UserPlus, CreditCard, Briefcase, BarChart, LogIn, LogOut, FileText, Bell, UserCircle, Film, Clipboard, Settings, DollarSign, TrendingUp, Award, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Home, Users, GraduationCap, BookOpen, UserPlus, CreditCard, Briefcase, BarChart, LogIn, LogOut, FileText, Bell, UserCircle, Film, Clipboard, Settings, DollarSign, TrendingUp, Award, X, ChevronLeft, ChevronRight, Receipt } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { UserPen } from 'lucide-react'
 
@@ -113,8 +113,14 @@ const Sidebar = ({ onClose }: SidebarProps) => {
                   </li>
                   <li>
                     <Link href="/financial-management" className="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded text-sm sm:text-base">
-                      <DollarSign size={18} className="sm:size-5" />
-                      {!collapsed && <span>Financial Mgmt</span>}
+                      <TrendingUp size={18} className="sm:size-5" />
+                      {!collapsed && <span>Financial Performance</span>}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/school-expenses" className="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded text-sm sm:text-base">
+                      <Receipt size={18} className="sm:size-5" />
+                      {!collapsed && <span>School Expenses</span>}
                     </Link>
                   </li>
                   <li>
