@@ -1,15 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, GraduationCap, BookOpen, CreditCard } from 'lucide-react'
 import Link from 'next/link'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 export default function Dashboard() {
   const { user, userRole } = useAuth()
+  const router = useRouter()
   const [stats, setStats] = useState({
     studentCount: 0,
     teacherCount: 0,
@@ -49,25 +52,9 @@ export default function Dashboard() {
     })
   }
 
-  if (!user) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 text-center px-4">
-        <h1 className="text-2xl sm:text-3xl font-bold">Welcome to Gem Stone Salafi School</h1>
-        <p className="text-gray-600 max-w-sm">Islamic education for children ages 6-14. Please log in to access the dashboard.</p>
-        <div className="flex gap-3">
-          <Link href="/login">
-            <Button>Login</Button>
-          </Link>
-          <Link href="/signup">
-            <Button variant="outline">Sign Up</Button>
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="space-y-4">
+    <ProtectedRoute>
+      <div className="space-y-4">
       <h1 className="text-2xl sm:text-3xl font-bold">Gem Stone Salafi School Dashboard</h1>
       {['staff', 'principal', 'admin'].includes(userRole || '') && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -148,5 +135,6 @@ export default function Dashboard() {
         </Card>
       </div>
     </div>
+    </ProtectedRoute>
   )
 }
