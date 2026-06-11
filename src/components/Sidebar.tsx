@@ -139,6 +139,14 @@ const Sidebar = ({ onClose }: SidebarProps) => {
                   </Link>
                 </li>
               )}
+              {['teacher', 'staff', 'principal', 'admin'].includes(userRole || '') && (
+                <li>
+                  <Link href="/hifz-tracker" className="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded text-sm sm:text-base">
+                    <BookOpen size={18} className="sm:size-5" />
+                    {!collapsed && <span>Hifz Tracker</span>}
+                  </Link>
+                </li>
+              )}
               {userRole === 'student' && (
                 <li>
                   <Link href="/teacher-qualifications" className="flex items-center space-x-2 p-2 hover:bg-gray-200 rounded text-sm sm:text-base">
